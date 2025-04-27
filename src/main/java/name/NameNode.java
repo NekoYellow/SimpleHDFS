@@ -6,8 +6,8 @@ import java.io.*;
 import java.util.*;
 
 public class NameNode implements Serializable {
-    private Map<String, FileMetadata> fileTable; // fileName -> metadata
-    private Map<String, DataNode> blockTable; // blockId -> dataNode
+    private final Map<String, FileMetadata> fileTable; // fileName -> metadata
+    private final Map<String, DataNode> blockTable; // blockId -> dataNode
     public static final int replicaCount = 3;
     private int blockCounter;
 
