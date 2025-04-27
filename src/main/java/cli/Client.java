@@ -54,7 +54,7 @@ public class Client {
         }
 
         FileMetadata meta = nameNode.getFileMetadata(fileName);
-        int length = data.length, b = NameNode.blockSize, r = NameNode.replicaCount, offset = meta.fileSize;
+        int length = data.length, b = DataBlock.blockSize, r = NameNode.replicaCount, offset = meta.fileSize;
 
         for (int i = 0; i < length; ) {
             int inc = Math.min(length - i, b - (offset + i) % b);
@@ -87,7 +87,7 @@ public class Client {
         }
 
         FileMetadata meta = nameNode.getFileMetadata(fileName);
-        int b = NameNode.blockSize, r = NameNode.replicaCount;
+        int b = DataBlock.blockSize, r = NameNode.replicaCount;
 
         if (length == -1) length = meta.fileSize;
         byte[] data = new byte[length];
