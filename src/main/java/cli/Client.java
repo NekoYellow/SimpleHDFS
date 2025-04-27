@@ -54,12 +54,12 @@ public class Client {
         }
 
         FileMetadata meta = nameNode.getFileMetadata(fileName);
-        int length = data.length, b = NameNode.blockSize, r = NameNode.replicaCount;
+        int length = data.length, b = NameNode.blockSize, r = NameNode.replicaCount, offset = meta.fileSize;
 
         for (int i = 0; i < length; ) {
-            int inc = Math.min(length - i, b);
+            int inc = Math.min(length - i, b - (offset + i) % b);
 
-            int blockIndex = i / b;
+            int blockIndex = (offset + i) / b;
             if (blockIndex * r >= meta.blockIds.size()) {
                 allocateBlocks(fileName);
             }
@@ -69,7 +69,7 @@ public class Client {
                 DataNode dataNode = nameNode.whichNode(blockId);
                 DataBlock block = dataNode.readBlock(blockId);
                 if (block == null) block = new DataBlock(blockId, new byte[b]);
-                System.arraycopy(data, i, block.data, 0, inc);
+                System.arraycopy(data, i, block.data, (offset + i) % b, inc);
                 dataNode.writeBlock(block);
                 System.out.println("Written data to " + blockId);
             }
